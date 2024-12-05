@@ -1,3 +1,32 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/no-unescaped-entities": "off",
+    "semi": ["error", "never"]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "prettier/prettier": [
+    "error",
+    {
+      "semi": false
+    }
+  ]
 }
