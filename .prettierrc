@@ -1,0 +1,37 @@
+{
+  "semi": false,
+  "plugins": [
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "tabWidth": 2,
+  "printWidth": 80,
+  "arrowParens": "avoid",
+  "overrides": [
+    {
+      "files": "*.php",
+      "options": {
+        "parser": "php",
+        "plugins": ["@prettier/plugin-php"]
+      }
+    },
+    {
+      "files": "*.blade.php",
+      "options": {
+        "parser": "blade",
+        "printWidth": 80,
+        "tabWidth": 1,
+        "useTabs": true,
+        "sortHtmlAttributes": "alphabetical",
+        "wrapAttributes": "auto",
+        "wrapAttributesMinAttrs": 2,
+        "sortTailwindcssClasses": true,
+        "taildwindcssConfigPath": "./tailwind.config.js",
+        "endWithNewline": false,
+        "plugins": ["@shufo/prettier-plugin-blade"]
+      }
+    }
+  ]
+}
