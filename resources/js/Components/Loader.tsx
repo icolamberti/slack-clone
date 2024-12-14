@@ -2,7 +2,7 @@ import { cn } from '@/Lib/utils'
 
 export default function ({ className }: { className?: string }) {
   return (
-    <div className={className}>
+    <div className={cn('flex items-center justify-center', className)}>
       <svg
         viewBox='0 0 50 50'
         xmlns='http://www.w3.org/2000/svg'
