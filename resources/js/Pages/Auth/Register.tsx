@@ -50,7 +50,7 @@ export default function () {
 
               <Input
                 id='name'
-                disabled={false}
+                disabled={processing}
                 value={data.name}
                 onChange={event => setData('name', event.target.value)}
                 required
@@ -64,7 +64,7 @@ export default function () {
 
               <Input
                 id='email'
-                disabled={false}
+                disabled={processing}
                 value={data.email}
                 onChange={event => setData('email', event.target.value)}
                 type='email'
@@ -79,7 +79,7 @@ export default function () {
 
               <Input
                 id='password'
-                disabled={false}
+                disabled={processing}
                 type='password'
                 value={data.password}
                 onChange={event => setData('password', event.target.value)}
@@ -94,7 +94,7 @@ export default function () {
 
               <Input
                 id='password_confirmation'
-                disabled={false}
+                disabled={processing}
                 type='password'
                 value={data.password_confirmation}
                 onChange={event =>
@@ -120,7 +120,7 @@ export default function () {
 
           <div className='flex flex-col gap-y-2.5'>
             <Button
-              disabled={false}
+              disabled={processing}
               variant={'outline'}
               size={'lg'}
               className='relative w-full'
@@ -130,7 +130,7 @@ export default function () {
             </Button>
 
             <Button
-              disabled={false}
+              disabled={processing}
               variant={'outline'}
               size={'lg'}
               className='relative w-full'

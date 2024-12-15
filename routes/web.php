@@ -7,8 +7,8 @@ require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/', function () {
-    return inertia('Dashboard')->name('dashboard');
-  });
+    return inertia('Dashboard');
+  })->name('dashboard');
 });
 
 // Route::middleware('auth')->group(function () {

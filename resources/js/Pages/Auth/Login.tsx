@@ -14,7 +14,7 @@ import { Separator } from '@/Components/Ui/separator'
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Link, useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
-import { FaFacebook } from 'react-icons/fa6'
+import { FaGithub } from 'react-icons/fa6'
 import { FcGoogle } from 'react-icons/fc'
 
 type FormData = {
@@ -57,7 +57,7 @@ export default function () {
 
               <Input
                 id='email'
-                disabled={false}
+                disabled={processing}
                 value={data.email}
                 onChange={event => setData('email', event.target.value)}
                 type='email'
@@ -72,7 +72,7 @@ export default function () {
 
               <Input
                 id='password'
-                disabled={false}
+                disabled={processing}
                 type='password'
                 value={data.password}
                 onChange={event => setData('password', event.target.value)}
@@ -88,6 +88,7 @@ export default function () {
                   id='remember'
                   checked={data.remember}
                   onCheckedChange={() => setData('remember', !data.remember)}
+                  disabled={processing}
                 />
 
                 <Label htmlFor='remember'>Remember me</Label>
@@ -114,25 +115,29 @@ export default function () {
           <Separator />
 
           <div className='flex flex-col gap-y-2.5'>
-            <Button
-              disabled={false}
-              variant={'outline'}
-              size={'lg'}
-              className='relative w-full'
-            >
-              <FcGoogle className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform' />
-              Continue with Google
-            </Button>
+            <a href='/login/google'>
+              <Button
+                disabled={processing}
+                variant={'outline'}
+                size={'lg'}
+                className='relative w-full'
+              >
+                <FcGoogle className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform' />
+                Continue with Google
+              </Button>
+            </a>
 
-            <Button
-              disabled={false}
-              variant={'outline'}
-              size={'lg'}
-              className='relative w-full'
-            >
-              <FaFacebook className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform text-blue-600' />
-              Continue with Facebook
-            </Button>
+            <a href='/login/github'>
+              <Button
+                disabled={processing}
+                variant={'outline'}
+                size={'lg'}
+                className='relative w-full'
+              >
+                <FaGithub className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform' />
+                Continue with Github
+              </Button>
+            </a>
           </div>
 
           <p className='text-muted-foreground text-xs'>
