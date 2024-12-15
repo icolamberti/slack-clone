@@ -10,24 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
-  /**
-   * Display the registration view.
-   */
-  public function create(): Response
+  public function create()
   {
-    return Inertia::render('Auth/Register');
+    return inertia('Auth/Register');
   }
 
-  /**
-   * Handle an incoming registration request.
-   *
-   * @throws \Illuminate\Validation\ValidationException
-   */
   public function store(Request $request): RedirectResponse
   {
     $request->validate([
@@ -44,9 +34,8 @@ class RegisteredUserController extends Controller
     ]);
 
     event(new Registered($user));
-
     Auth::login($user);
 
-    return redirect(route('dashboard', absolute: false));
+    return to_route('dashboard');
   }
 }

@@ -1,20 +1,30 @@
-import Checkbox from '@/Components/Checkbox'
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
+import Error from '@/Components/Form/Error'
+import { Button } from '@/Components/Ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/Components/Ui/card'
+import { Checkbox } from '@/Components/Ui/checkbox'
+import { Input } from '@/Components/Ui/input'
+import { Label } from '@/Components/Ui/label'
+import { Separator } from '@/Components/Ui/separator'
 import GuestLayout from '@/Layouts/GuestLayout'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
+import { FaFacebook } from 'react-icons/fa6'
+import { FcGoogle } from 'react-icons/fc'
 
-export default function Login({
-  status,
-  canResetPassword,
-}: {
-  status?: string
-  canResetPassword: boolean
-}) {
-  const { data, setData, post, processing, errors, reset } = useForm({
+type FormData = {
+  email: string
+  password: string
+  remember: boolean
+}
+
+export default function () {
+  const { data, setData, post, processing, errors, reset } = useForm<FormData>({
     email: '',
     password: '',
     remember: false,
@@ -23,81 +33,116 @@ export default function Login({
   const submit: FormEventHandler = e => {
     e.preventDefault()
 
-    post(route('login'), {
+    post('', {
       onFinish: () => reset('password'),
     })
   }
 
+  console.log('data', data)
   return (
     <GuestLayout>
-      <Head title='Log in' />
+      <Card className='h-full w-full p-8'>
+        <CardHeader className='px-0 pt-0'>
+          <CardTitle>Login to continue</CardTitle>
 
-      {status && (
-        <div className='mb-4 text-sm font-medium text-green-600'>{status}</div>
-      )}
+          <CardDescription>
+            Use your email or another service to continue
+          </CardDescription>
+        </CardHeader>
 
-      <form onSubmit={submit}>
-        <div>
-          <InputLabel htmlFor='email' value='Email' />
+        <CardContent className='space-y-5 px-0 pb-0'>
+          <form onSubmit={submit} className='flex flex-col gap-y-2.5'>
+            <div>
+              <Label htmlFor='email'>Email</Label>
 
-          <TextInput
-            id='email'
-            type='email'
-            name='email'
-            value={data.email}
-            className='mt-1 block w-full'
-            autoComplete='username'
-            isFocused={true}
-            onChange={e => setData('email', e.target.value)}
-          />
+              <Input
+                id='email'
+                disabled={false}
+                value={data.email}
+                onChange={event => setData('email', event.target.value)}
+                type='email'
+                required
+              />
 
-          <InputError message={errors.email} className='mt-2' />
-        </div>
+              <Error message={errors.email} />
+            </div>
 
-        <div className='mt-4'>
-          <InputLabel htmlFor='password' value='Password' />
+            <div>
+              <Label htmlFor='password'>Password</Label>
 
-          <TextInput
-            id='password'
-            type='password'
-            name='password'
-            value={data.password}
-            className='mt-1 block w-full'
-            autoComplete='current-password'
-            onChange={e => setData('password', e.target.value)}
-          />
+              <Input
+                id='password'
+                disabled={false}
+                type='password'
+                value={data.password}
+                onChange={event => setData('password', event.target.value)}
+                required
+              />
 
-          <InputError message={errors.password} className='mt-2' />
-        </div>
+              <Error message={errors.password} />
+            </div>
 
-        <div className='mt-4 block'>
-          <label className='flex items-center'>
-            <Checkbox
-              name='remember'
-              checked={data.remember}
-              onChange={e => setData('remember', e.target.checked)}
-            />
-            <span className='ms-2 text-sm text-gray-600 dark:text-gray-400'>
-              Remember me
-            </span>
-          </label>
-        </div>
+            <div className='flex justify-between'>
+              <div className='flex items-center gap-2'>
+                <Checkbox
+                  id='remember'
+                  checked={data.remember}
+                  onCheckedChange={() => setData('remember', !data.remember)}
+                />
 
-        <div className='mt-4 flex items-center justify-end'>
-          {canResetPassword && (
-            <Link
-              href={route('password.request')}
-              className='rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800'
+                <Label htmlFor='remember'>Remember me</Label>
+              </div>
+
+              <Link
+                href={'password.request'}
+                className='text-muted-foreground text-xs hover:underline'
+              >
+                Forgot your password?
+              </Link>
+            </div>
+
+            <Button
+              isLoading={processing}
+              type='submit'
+              className='mt-5 w-full'
+              size={'lg'}
             >
-              Forgot your password?
-            </Link>
-          )}
+              Continue
+            </Button>
+          </form>
 
-          <PrimaryButton className='ms-4' disabled={processing}>
-            Log in
-          </PrimaryButton>
-        </div>
-      </form>
+          <Separator />
+
+          <div className='flex flex-col gap-y-2.5'>
+            <Button
+              disabled={false}
+              variant={'outline'}
+              size={'lg'}
+              className='relative w-full'
+            >
+              <FcGoogle className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform' />
+              Continue with Google
+            </Button>
+
+            <Button
+              disabled={false}
+              variant={'outline'}
+              size={'lg'}
+              className='relative w-full'
+            >
+              <FaFacebook className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform text-blue-600' />
+              Continue with Facebook
+            </Button>
+          </div>
+
+          <p className='text-muted-foreground text-xs'>
+            Don't have an account?{' '}
+            <Link href='register' className='text-sky-700 hover:underline'>
+              Register
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </GuestLayout>
   )
 }

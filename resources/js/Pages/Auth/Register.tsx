@@ -1,12 +1,22 @@
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
+import Error from '@/Components/Form/Error'
+import { Button } from '@/Components/Ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/Components/Ui/card'
+import { Input } from '@/Components/Ui/input'
+import { Label } from '@/Components/Ui/label'
+import { Separator } from '@/Components/Ui/separator'
 import GuestLayout from '@/Layouts/GuestLayout'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
+import { FaFacebook } from 'react-icons/fa6'
+import { FcGoogle } from 'react-icons/fc'
 
-export default function Register() {
+export default function () {
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     email: '',
@@ -17,100 +27,127 @@ export default function Register() {
   const submit: FormEventHandler = e => {
     e.preventDefault()
 
-    post(route('register'), {
+    post('', {
       onFinish: () => reset('password', 'password_confirmation'),
     })
   }
 
   return (
     <GuestLayout>
-      <Head title='Register' />
+      <Card className='h-full w-full p-8'>
+        <CardHeader className='px-0 pt-0'>
+          <CardTitle>Register to continue</CardTitle>
 
-      <form onSubmit={submit}>
-        <div>
-          <InputLabel htmlFor='name' value='Name' />
+          <CardDescription>
+            Use your email or another service to continue
+          </CardDescription>
+        </CardHeader>
 
-          <TextInput
-            id='name'
-            name='name'
-            value={data.name}
-            className='mt-1 block w-full'
-            autoComplete='name'
-            isFocused={true}
-            onChange={e => setData('name', e.target.value)}
-            required
-          />
+        <CardContent className='space-y-5 px-0 pb-0'>
+          <form onSubmit={submit} className='flex flex-col gap-y-2.5'>
+            <div>
+              <Label htmlFor='name'>Name</Label>
 
-          <InputError message={errors.name} className='mt-2' />
-        </div>
+              <Input
+                id='name'
+                disabled={false}
+                value={data.name}
+                onChange={event => setData('name', event.target.value)}
+                required
+              />
 
-        <div className='mt-4'>
-          <InputLabel htmlFor='email' value='Email' />
+              <Error message={errors.name} />
+            </div>
 
-          <TextInput
-            id='email'
-            type='email'
-            name='email'
-            value={data.email}
-            className='mt-1 block w-full'
-            autoComplete='username'
-            onChange={e => setData('email', e.target.value)}
-            required
-          />
+            <div>
+              <Label htmlFor='email'>Email</Label>
 
-          <InputError message={errors.email} className='mt-2' />
-        </div>
+              <Input
+                id='email'
+                disabled={false}
+                value={data.email}
+                onChange={event => setData('email', event.target.value)}
+                type='email'
+                required
+              />
 
-        <div className='mt-4'>
-          <InputLabel htmlFor='password' value='Password' />
+              <Error message={errors.email} />
+            </div>
 
-          <TextInput
-            id='password'
-            type='password'
-            name='password'
-            value={data.password}
-            className='mt-1 block w-full'
-            autoComplete='new-password'
-            onChange={e => setData('password', e.target.value)}
-            required
-          />
+            <div>
+              <Label htmlFor='password'>Password</Label>
 
-          <InputError message={errors.password} className='mt-2' />
-        </div>
+              <Input
+                id='password'
+                disabled={false}
+                type='password'
+                value={data.password}
+                onChange={event => setData('password', event.target.value)}
+                required
+              />
 
-        <div className='mt-4'>
-          <InputLabel
-            htmlFor='password_confirmation'
-            value='Confirm Password'
-          />
+              <Error message={errors.password} />
+            </div>
 
-          <TextInput
-            id='password_confirmation'
-            type='password'
-            name='password_confirmation'
-            value={data.password_confirmation}
-            className='mt-1 block w-full'
-            autoComplete='new-password'
-            onChange={e => setData('password_confirmation', e.target.value)}
-            required
-          />
+            <div>
+              <Label htmlFor='password_confirmation'>Confirm password</Label>
 
-          <InputError message={errors.password_confirmation} className='mt-2' />
-        </div>
+              <Input
+                id='password_confirmation'
+                disabled={false}
+                type='password'
+                value={data.password_confirmation}
+                onChange={event =>
+                  setData('password_confirmation', event.target.value)
+                }
+                required
+              />
 
-        <div className='mt-4 flex items-center justify-end'>
-          <Link
-            href={route('login')}
-            className='rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800'
-          >
-            Already registered?
-          </Link>
+              <Error message={errors.password_confirmation} />
+            </div>
 
-          <PrimaryButton className='ms-4' disabled={processing}>
-            Register
-          </PrimaryButton>
-        </div>
-      </form>
+            <Button
+              isLoading={processing}
+              type='submit'
+              className='mt-5 w-full'
+              size={'lg'}
+            >
+              Continue
+            </Button>
+          </form>
+
+          <Separator />
+
+          <div className='flex flex-col gap-y-2.5'>
+            <Button
+              disabled={false}
+              variant={'outline'}
+              size={'lg'}
+              className='relative w-full'
+            >
+              <FcGoogle className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform' />
+              Continue with Google
+            </Button>
+
+            <Button
+              disabled={false}
+              variant={'outline'}
+              size={'lg'}
+              className='relative w-full'
+            >
+              <FaFacebook className='absolute left-2.5 top-1/2 size-5 -translate-y-1/2 transform text-blue-600' />
+              Continue with Facebook
+            </Button>
+          </div>
+
+          <p className='text-muted-foreground text-xs'>
+            Already have an account?{' '}
+            <Link href='login' className='text-sky-700 hover:underline'>
+              Login
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </GuestLayout>
   )
 }
