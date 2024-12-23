@@ -12,8 +12,11 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
-  public function store(): RedirectResponse
+  public function store(Request $request): RedirectResponse
   {
+    $state = $request->get('state');
+    $request->session()->put('state', $state);
+
     $googleUser = Socialite::driver('google')->user();
 
     $user = User::where('email', $googleUser->email)->first();
@@ -28,9 +31,17 @@ class GoogleController extends Controller
       ]);
     }
 
-    $user->update([
-      'avatar' => $googleUser->avatar,
-    ]);
+    if ($user->avatar !== $googleUser->avatar) {
+      $user->update([
+        'avatar' => $googleUser->avatar,
+      ]);
+    }
+
+    if ($user->google_token !== $googleUser->token) {
+      $user->update([
+        'google_token' => $googleUser->token,
+      ]);
+    }
 
     if ($user->email_verified_at === null) {
       $user->update([

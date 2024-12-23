@@ -12,8 +12,11 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GithubController extends Controller
 {
-  public function store(): RedirectResponse
+  public function store(Request $request): RedirectResponse
   {
+    $state = $request->get('state');
+    $request->session()->put('state', $state);
+
     $githubUser = Socialite::driver('github')->user();
 
     $user = User::where('email', $githubUser->email)->first();
@@ -27,10 +30,17 @@ class GithubController extends Controller
         'github_token' => $githubUser->token,
       ]);
     }
+    if ($user->avatar !== $githubUser->avatar) {
+      $user->update([
+        'avatar' => $githubUser->avatar,
+      ]);
+    }
 
-    $user->update([
-      'avatar' => $githubUser->avatar,
-    ]);
+    if ($user->github_token !== $githubUser->token) {
+      $user->update([
+        'github_token' => $githubUser->token,
+      ]);
+    }
 
     if ($user->email_verified_at === null) {
       $user->update([
