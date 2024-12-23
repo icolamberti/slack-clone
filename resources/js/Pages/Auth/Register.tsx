@@ -46,7 +46,7 @@ export default function () {
         <CardContent className='space-y-5 px-0 pb-0'>
           <form onSubmit={submit} className='flex flex-col gap-y-2.5'>
             <div>
-              <Label htmlFor='name'>Name</Label>
+              <Label htmlFor='name'>Full name</Label>
 
               <Input
                 id='name'
@@ -140,7 +140,7 @@ export default function () {
             </Button>
           </div>
 
-          <p className='text-muted-foreground text-xs'>
+          <p className='text-xs text-muted-foreground'>
             Already have an account?{' '}
             <Link href='login' className='text-sky-700 hover:underline'>
               Login

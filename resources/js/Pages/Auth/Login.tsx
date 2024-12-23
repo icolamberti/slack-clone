@@ -1,4 +1,3 @@
-import Error from '@/Components/Form/Error'
 import { Button } from '@/Components/Ui/button'
 import {
   Card,
@@ -13,6 +12,7 @@ import { Label } from '@/Components/Ui/label'
 import { Separator } from '@/Components/Ui/separator'
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Link, useForm } from '@inertiajs/react'
+import { TriangleAlert } from 'lucide-react'
 import { FormEventHandler } from 'react'
 import { FaGithub } from 'react-icons/fa6'
 import { FcGoogle } from 'react-icons/fc'
@@ -52,6 +52,14 @@ export default function () {
 
         <CardContent className='space-y-5 px-0 pb-0'>
           <form onSubmit={submit} className='flex flex-col gap-y-2.5'>
+            {errors.email && (
+              <div className='mb-6 flex items-center gap-x-2 rounded-md bg-destructive/15 p-3 text-sm text-destructive'>
+                <TriangleAlert className='size-4' />
+
+                <p>{errors.email}</p>
+              </div>
+            )}
+
             <div>
               <Label htmlFor='email'>Email</Label>
 
@@ -63,8 +71,6 @@ export default function () {
                 type='email'
                 required
               />
-
-              <Error message={errors.email} />
             </div>
 
             <div>
@@ -78,8 +84,6 @@ export default function () {
                 onChange={event => setData('password', event.target.value)}
                 required
               />
-
-              <Error message={errors.password} />
             </div>
 
             <div className='flex justify-between'>
@@ -96,7 +100,7 @@ export default function () {
 
               <Link
                 href={'password.request'}
-                className='text-muted-foreground text-xs hover:underline'
+                className='text-xs text-muted-foreground hover:underline'
               >
                 Forgot your password?
               </Link>
@@ -140,7 +144,7 @@ export default function () {
             </a>
           </div>
 
-          <p className='text-muted-foreground text-xs'>
+          <p className='text-xs text-muted-foreground'>
             Don't have an account?{' '}
             <Link href='register' className='text-sky-700 hover:underline'>
               Register
