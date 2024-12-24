@@ -38,7 +38,6 @@ export default function () {
     })
   }
 
-  console.log('data', data)
   return (
     <GuestLayout>
       <Card className='h-full w-full p-8'>
@@ -99,7 +98,7 @@ export default function () {
               </div>
 
               <Link
-                href={'password.request'}
+                href='/forgot-password'
                 className='text-xs text-muted-foreground hover:underline'
               >
                 Forgot your password?
