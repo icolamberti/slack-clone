@@ -22,7 +22,12 @@ class User extends Authenticatable implements MustVerifyEmail
     'google_token',
   ];
 
-  protected $hidden = ['password', 'remember_token'];
+  protected $hidden = [
+    'password',
+    'remember_token',
+    'github_token',
+    'google_token',
+  ];
 
   protected function casts(): array
   {

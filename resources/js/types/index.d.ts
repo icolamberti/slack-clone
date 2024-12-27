@@ -1,8 +1,9 @@
-export interface User {
-  id: number
+export type User = {
+  id: string
   name: string
   email: string
   email_verified_at?: string
+  avatar?: string
 }
 
 export type PageProps<

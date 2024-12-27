@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react'
 
-export default function Guest({ children }: PropsWithChildren) {
+export default function ({ children }: PropsWithChildren) {
   return (
-    <div className='bg-secondary flex h-svh items-center justify-center'>
+    <div className='flex h-svh items-center justify-center bg-secondary'>
       <div className='flex flex-col items-center md:h-auto md:w-[420px]'>
         imagem {/* TODO: logo */}
         {children}
