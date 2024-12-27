@@ -38,6 +38,15 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
   }
 
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::addGlobalScope('withRelations', function ($builder) {
+      $builder->with(['workspaces']);
+    });
+  }
+
   public function workspaces(): HasMany
   {
     return $this->hasMany(Workspace::class);
