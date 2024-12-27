@@ -52,7 +52,9 @@ export default function ({ open, setOpen }: Props) {
           </div>
 
           <div className='flex justify-end'>
-            <Button isLoading={processing}>Create</Button>
+            <Button isLoading={processing} className='w-24'>
+              Create
+            </Button>
           </div>
         </form>
       </DialogContent>
