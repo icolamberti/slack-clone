@@ -43,7 +43,6 @@ export default function ({ open, setOpen }: Props) {
               placeholder="e.g. 'Work', 'Personal', 'Home'"
               value={data.name}
               required
-              autoFocus
               minLength={3}
               maxLength={255}
               onChange={e => setData('name', e.target.value)}

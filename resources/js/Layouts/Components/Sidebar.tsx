@@ -1,4 +1,3 @@
-import UserButton from '@/Components/UserButton'
 import {
   BellIcon,
   HomeIcon,
@@ -6,6 +5,7 @@ import {
   MoreHorizontalIcon,
 } from 'lucide-react'
 import SidebarButton from './SidebarButton'
+import UserButton from './UserButton'
 import WorkspaceSwitcher from './WorkspaceSwitcher'
 
 export default function () {

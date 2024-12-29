@@ -12,5 +12,7 @@ Route::prefix('workspaces')
 
     Route::post('store', [WorkspaceController::class, 'store'])->name('store');
 
-    Route::get('{id}', [WorkspaceController::class, 'show'])->name('show');
+    Route::get('{id}', [WorkspaceController::class, 'show'])
+      ->middleware(['workspace.member'])
+      ->name('show');
   });

@@ -18,7 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
       ]
     );
 
-    //
+    $middleware->alias([
+      'workspace.member' => \App\Http\Middleware\WorkspaceMember::class,
+    ]);
   })
   ->withExceptions(function (Exceptions $exceptions) {
     //

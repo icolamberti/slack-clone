@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class WorkspaceController extends Controller
 {
@@ -21,9 +22,17 @@ class WorkspaceController extends Controller
 
     $user = Auth::user();
 
-    $workspace = $user->workspaces()->create([
+    $joinCode = Str::random(6);
+
+    $workspace = Workspace::create([
+      'user_id' => $user->id,
       'name' => $request->name,
-      'join_code' => '123456',
+      'join_code' => $joinCode,
+    ]);
+
+    $workspace->members()->create([
+      'user_id' => $user->id,
+      'role' => 'admin',
     ]);
 
     return to_route('workspaces.show', $workspace->id)->with(
