@@ -1,5 +1,4 @@
 import CreateWorkspaceModal from '@/Components/Workspaces/CreateWorkspaceModal'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { usePage } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
 
@@ -15,8 +14,8 @@ export default function () {
   }, [user.workspaces, open, setOpen])
 
   return (
-    <AuthenticatedLayout>
+    <div className='flex h-svh items-center justify-center bg-secondary'>
       <CreateWorkspaceModal open={open} setOpen={setOpen} />
-    </AuthenticatedLayout>
+    </div>
   )
 }

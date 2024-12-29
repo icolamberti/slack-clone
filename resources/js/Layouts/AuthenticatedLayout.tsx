@@ -1,8 +1,9 @@
 import { Toaster } from '@/Components/Ui/sonner'
-import UserButton from '@/Components/UserButton'
 import { usePage } from '@inertiajs/react'
 import { PropsWithChildren, useEffect } from 'react'
 import { toast } from 'sonner'
+import Sidebar from './Components/Sidebar'
+import Toolbar from './Components/Toolbar'
 
 export default function ({ children }: PropsWithChildren) {
   const { flash } = usePage().props
@@ -17,14 +18,17 @@ export default function ({ children }: PropsWithChildren) {
   }, [flash])
 
   return (
-    <div className='flex h-svh items-center justify-center bg-secondary'>
+    <>
       <Toaster />
+      <div className='h-svh'>
+        <Toolbar />
 
-      <div className='flex flex-col items-center md:h-auto md:w-[420px]'>
-        imagem {/* TODO: logo */}
-        {children}
-        <UserButton />
+        <div className='flex h-[calc(100svh-40px)]'>
+          <Sidebar />
+
+          {children}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
