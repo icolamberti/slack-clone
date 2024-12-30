@@ -43,7 +43,7 @@ class WorkspaceController extends Controller
 
   public function show(string $id)
   {
-    $workspace = Workspace::findOrFail($id);
+    $workspace = Workspace::with(['members'])->findOrFail($id);
 
     return inertia('Workspaces/Show', [
       'workspace' => $workspace,
