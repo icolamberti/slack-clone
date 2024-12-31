@@ -17,7 +17,7 @@ class WorkspaceController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'name' => 'required|string|max:255|min:3',
+      'name' => 'required|string|max:80|min:3',
     ]);
 
     $user = Auth::user();
@@ -41,6 +41,19 @@ class WorkspaceController extends Controller
     );
   }
 
+  public function update(Request $request)
+  {
+    $request->validate([
+      'name' => 'required|string|max:80|min:3',
+    ]);
+
+    Workspace::findOrFail($request->id)->update([
+      'name' => $request->name,
+    ]);
+
+    session()->flash('success', 'Workspace updated successfully');
+  }
+
   public function show(string $id)
   {
     $workspace = Workspace::with(['members'])->findOrFail($id);
@@ -48,5 +61,23 @@ class WorkspaceController extends Controller
     return inertia('Workspaces/Show', [
       'workspace' => $workspace,
     ]);
+  }
+
+  public function destroy(string $id)
+  {
+    $workspace = Workspace::findOrFail($id);
+
+    $workspace->delete();
+
+    $user = Auth::user();
+
+    if ($user->workspaces->count() === 0) {
+      return to_route('workspaces.create');
+    }
+
+    return to_route('workspaces.show', $user->workspaces->first()->id)->with(
+      'success',
+      'Workspace deleted successfully'
+    );
   }
 }

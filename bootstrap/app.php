@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
     $middleware->alias([
       'workspace.member' => \App\Http\Middleware\WorkspaceMember::class,
+      'workspace.admin' => \App\Http\Middleware\WorkspaceAdmin::class,
     ]);
   })
   ->withExceptions(function (Exceptions $exceptions) {

@@ -44,7 +44,7 @@ export default function ({ open, setOpen }: Props) {
               value={data.name}
               required
               minLength={3}
-              maxLength={255}
+              maxLength={80}
               onChange={e => setData('name', e.target.value)}
             />
             <Error message={errors.name} />

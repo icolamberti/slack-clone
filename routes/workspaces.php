@@ -15,4 +15,12 @@ Route::prefix('workspaces')
     Route::get('{id}', [WorkspaceController::class, 'show'])
       ->middleware(['workspace.member'])
       ->name('show');
+
+    Route::patch('{id}', [WorkspaceController::class, 'update'])
+      ->middleware(['workspace.admin'])
+      ->name('update');
+
+    Route::delete('{id}', [WorkspaceController::class, 'destroy'])
+      ->middleware(['workspace.admin'])
+      ->name('destroy');
   });
