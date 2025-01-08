@@ -35,6 +35,10 @@ class WorkspaceController extends Controller
       'role' => 'admin',
     ]);
 
+    $workspace->channels()->create([
+      'name' => 'general',
+    ]);
+
     return to_route('workspaces.show', $workspace->id)->with(
       'success',
       'Workspace created successfully'
@@ -56,7 +60,11 @@ class WorkspaceController extends Controller
 
   public function show(string $id)
   {
-    $workspace = Workspace::with(['members'])->findOrFail($id);
+    $workspace = Workspace::with([
+      'members',
+      'members.user:id,name,avatar',
+      'channels',
+    ])->findOrFail($id);
 
     return inertia('Workspaces/Show', [
       'workspace' => $workspace,

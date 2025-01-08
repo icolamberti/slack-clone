@@ -15,6 +15,11 @@ class Workspace extends Model
 
   protected $hidden = ['join_code'];
 
+  public function channels(): HasMany
+  {
+    return $this->hasMany(Channel::class);
+  }
+
   public function members(): HasMany
   {
     return $this->hasMany(Member::class);
