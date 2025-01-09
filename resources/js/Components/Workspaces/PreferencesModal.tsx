@@ -120,7 +120,7 @@ export default function ({ open, setOpen }: Props) {
               className='w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground'
               onClick={() => onDestroyHandler()}
             >
-              <TrashIcon className='!size-4' />
+              <TrashIcon className='size-4' />
               <p className='text-sm font-semibold'>Delete workspace</p>
             </Button>
           </div>
