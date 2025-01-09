@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,13 @@ Route::prefix('workspaces')
     Route::delete('{id}', [WorkspaceController::class, 'destroy'])
       ->middleware(['workspace.admin'])
       ->name('destroy');
+
+    // Channels
+    Route::prefix('{id}/channels')
+      ->name('channels.')
+      ->group(function () {
+        Route::post('', [ChannelController::class, 'store'])
+          ->middleware(['workspace.admin'])
+          ->name('store');
+      });
   });

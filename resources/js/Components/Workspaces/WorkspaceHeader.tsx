@@ -1,7 +1,8 @@
 import { useWorkspace } from '@/Context/WorkspaceContext'
+import { useIsAdmin } from '@/Hooks/UseIsAdmin'
 import { usePage } from '@inertiajs/react'
 import { ChevronDownIcon, ListFilterIcon, SquarePenIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import Hint from '../Hint'
 import { Button } from '../Ui/button'
 import {
@@ -19,13 +20,7 @@ export default function () {
 
   const [preferencesOpen, setPreferencesOpen] = useState(false)
 
-  const isAdmin = useMemo(() => {
-    const currentMember = workspace.members.find(
-      member => member.user_id === user.id,
-    )
-
-    return currentMember?.role === 'admin'
-  }, [workspace])
+  const isAdmin = useIsAdmin(workspace, user)
 
   return (
     <>
