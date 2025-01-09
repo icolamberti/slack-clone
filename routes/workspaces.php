@@ -36,7 +36,7 @@ Route::prefix('workspaces')
       });
 
     // Join workspace
-    Route::get('join', [JoinWorkspaceController::class, 'create'])->name(
+    Route::get('{id}/join', [JoinWorkspaceController::class, 'create'])->name(
       'join.create'
     );
 

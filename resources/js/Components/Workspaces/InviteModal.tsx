@@ -28,7 +28,7 @@ export default function ({ open, setOpen }: Props) {
   )
 
   const handleCopy = () => {
-    const inviteLink = `${window.location.origin}/workspaces/${workspace.id}/join`
+    const inviteLink = `${window.location.origin}/workspaces/${workspace.id}/join?code=${workspace.join_code.toUpperCase()}`
 
     navigator.clipboard
       .writeText(inviteLink)
