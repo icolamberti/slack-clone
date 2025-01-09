@@ -38,6 +38,14 @@ Route::prefix('workspaces')
         Route::get('{channel}', [ChannelController::class, 'show'])->name(
           'show'
         );
+
+        Route::patch('{channel}', [ChannelController::class, 'update'])
+          ->middleware(['workspace.admin'])
+          ->name('update');
+
+        Route::delete('{channel}', [ChannelController::class, 'destroy'])
+          ->middleware(['workspace.admin'])
+          ->name('destroy');
       });
 
     // Join workspace

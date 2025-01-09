@@ -1,3 +1,4 @@
+import ChannelHeader from '@/Components/Channels/ChannelHeader'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -28,7 +29,11 @@ export default function ({ workspace, channel }: Props) {
 
           <ResizableHandle withHandle />
 
-          <ResizablePanel minSize={20}>{channel.name}</ResizablePanel>
+          <ResizablePanel minSize={20}>
+            <div className='flex h-full flex-col'>
+              <ChannelHeader />
+            </div>
+          </ResizablePanel>
         </ResizablePanelGroup>
       </AuthenticatedLayout>
     </WorkspaceProvider>
