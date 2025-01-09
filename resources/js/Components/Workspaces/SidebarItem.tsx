@@ -32,7 +32,7 @@ export default function ({ label, id, icon: Icon, variant }: Props) {
   const { workspace } = useWorkspace()
 
   return (
-    <Link href={`/workspaces/${workspace.id}/channel/${id}`}>
+    <Link href={`/workspaces/${workspace.id}/channels/${id}`}>
       <Button
         className={cn('w-full', sidebarItemVariants({ variant: variant }))}
         variant={'transparent'}

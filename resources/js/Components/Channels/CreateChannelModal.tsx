@@ -36,7 +36,10 @@ export default function ({ open, setOpen }: Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    post(`/workspaces/${workspace.id}/channels`)
+    post(`/workspaces/${workspace.id}/channels`, {
+      preserveScroll: true,
+      onSuccess: handleClose,
+    })
   }
 
   return (

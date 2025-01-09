@@ -15,7 +15,7 @@ class Workspace extends Model
 
   public function channels(): HasMany
   {
-    return $this->hasMany(Channel::class);
+    return $this->hasMany(Channel::class)->orderBy('name');
   }
 
   public function members(): HasMany

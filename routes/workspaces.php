@@ -28,11 +28,16 @@ Route::prefix('workspaces')
 
     // Channels
     Route::prefix('{id}/channels')
+      ->middleware(['workspace.member'])
       ->name('channels.')
       ->group(function () {
         Route::post('', [ChannelController::class, 'store'])
           ->middleware(['workspace.admin'])
           ->name('store');
+
+        Route::get('{channel}', [ChannelController::class, 'show'])->name(
+          'show'
+        );
       });
 
     // Join workspace

@@ -35,14 +35,14 @@ class WorkspaceController extends Controller
       'role' => 'admin',
     ]);
 
-    $workspace->channels()->create([
+    $channel = $workspace->channels()->create([
       'name' => 'general',
     ]);
 
-    return to_route('workspaces.show', $workspace->id)->with(
-      'success',
-      'Workspace created successfully'
-    );
+    return to_route('workspaces.channels.show', [
+      $workspace->id,
+      $channel->id,
+    ])->with('success', 'Workspace created successfully');
   }
 
   public function update(Request $request)
@@ -65,6 +65,17 @@ class WorkspaceController extends Controller
       'members.user:id,name,avatar',
       'channels',
     ])->findOrFail($id);
+
+    if ($workspace->channels->count() > 0) {
+      $channel =
+        $workspace->channels->firstWhere('name', 'general') ??
+        $workspace->channels->first();
+
+      return to_route('workspaces.channels.show', [
+        $workspace->id,
+        $channel->id,
+      ]);
+    }
 
     return inertia('Workspaces/Show', [
       'workspace' => $workspace,
