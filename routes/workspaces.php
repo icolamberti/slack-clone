@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\JoinWorkspaceController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,4 +34,13 @@ Route::prefix('workspaces')
           ->middleware(['workspace.admin'])
           ->name('store');
       });
+
+    // Join workspace
+    Route::get('join', [JoinWorkspaceController::class, 'create'])->name(
+      'join.create'
+    );
+
+    Route::post('{id}/join/update', [JoinWorkspaceController::class, 'update'])
+      ->middleware('workspace.admin')
+      ->name('join.update');
   });

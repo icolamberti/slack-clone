@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../Ui/dropdown-menu'
+import InviteModal from './InviteModal'
 import PreferencesModal from './PreferencesModal'
 
 export default function () {
@@ -19,11 +20,13 @@ export default function () {
   const { workspace } = useWorkspace()
 
   const [preferencesOpen, setPreferencesOpen] = useState(false)
+  const [inviteOpen, setInviteOpen] = useState(false)
 
   const isAdmin = useIsAdmin(workspace, user)
 
   return (
     <>
+      <InviteModal open={inviteOpen} setOpen={setInviteOpen} />
       <PreferencesModal open={preferencesOpen} setOpen={setPreferencesOpen} />
 
       <div className='flex h-[49px] items-center justify-between gap-0.5 px-4'>
@@ -61,7 +64,7 @@ export default function () {
 
                 <DropdownMenuItem
                   className='cursor-pointer py-2'
-                  onClick={() => {}}
+                  onClick={() => setInviteOpen(true)}
                 >
                   Invite people to {workspace.name}
                 </DropdownMenuItem>
