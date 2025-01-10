@@ -1,6 +1,5 @@
 import { cn } from '@/Lib/utils'
-import { useForm } from '@inertiajs/react'
-import { ImageIcon, Smile } from 'lucide-react'
+import { ImageIcon, Smile, XIcon } from 'lucide-react'
 import Quill, { QuillOptions } from 'quill'
 import { Delta, Op } from 'quill/core'
 import 'quill/dist/quill.snow.css'
@@ -41,13 +40,11 @@ const Editor = ({
   disabled = false,
   innerRef,
 }: Props) => {
-  const { data, setData, post, processing, reset } = useForm({
-    text: '',
-  })
-
+  const [text, setText] = useState('')
+  const [image, setImage] = useState<File | null>(null)
   const [isToolbarVisible, setIsToolbarVisible] = useState(true)
 
-  const isEmpty = data.text.trim().length === 0
+  const isEmpty = text.trim().length === 0
 
   const toggleToolbar = () => {
     setIsToolbarVisible(current => !current)
@@ -70,6 +67,7 @@ const Editor = ({
   const defaultValueRef = useRef(defaultValue)
   const containerRef = useRef<HTMLDivElement>(null)
   const disabledRef = useRef(disabled)
+  const imageElementRef = useRef<HTMLInputElement>(null)
 
   useLayoutEffect(() => {
     submitRef.current = onSubmit
@@ -125,10 +123,10 @@ const Editor = ({
     }
 
     quill.setContents(defaultValueRef.current)
-    setData('text', quill.getText())
+    setText(quill.getText())
 
     quill.on(Quill.events.TEXT_CHANGE, () => {
-      setData('text', quill.getText())
+      setText(quill.getText())
     })
 
     return () => {
@@ -150,8 +148,40 @@ const Editor = ({
 
   return (
     <div className='flex flex-col'>
+      <input
+        type='file'
+        accept='image/*'
+        ref={imageElementRef}
+        onChange={e => setImage(e.target.files![0])}
+        className='hidden'
+      />
+
       <div className='flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-slate-300 focus-within:shadow-sm'>
         <div ref={containerRef} className='ql-custom h-full' />
+
+        {!!image && (
+          <div className='p-2'>
+            <div className='group/image relative flex size-[62px] items-center justify-center'>
+              <Hint label='Remove image'>
+                <button
+                  onClick={() => {
+                    setImage(null)
+                    imageElementRef.current!.value = ''
+                  }}
+                  className='absolute -right-2.5 -top-2.5 z-[4] hidden size-6 items-center justify-center rounded-full border-2 border-white bg-black/70 text-white hover:bg-black group-hover/image:flex'
+                >
+                  <XIcon className='size-3.5' />
+                </button>
+              </Hint>
+
+              <img
+                src={URL.createObjectURL(image)}
+                alt='Uploaded'
+                className='overflow-hidden rounded-xl border object-cover'
+              />
+            </div>
+          </div>
+        )}
 
         <div className='z-[5] flex px-2 pb-2'>
           <Hint
@@ -178,7 +208,7 @@ const Editor = ({
               <Button
                 size='iconSm'
                 variant='ghost'
-                onClick={() => {}}
+                onClick={() => imageElementRef.current?.click()}
                 disabled={disabled}
               >
                 <ImageIcon className='size-4' />
@@ -199,7 +229,6 @@ const Editor = ({
 
               <Button
                 disabled={disabled || isEmpty}
-                isLoading={processing}
                 size={'sm'}
                 onClick={() => {}}
                 className='bg-[#007a5a] text-white hover:bg-[#007a5a]/80'
@@ -212,7 +241,6 @@ const Editor = ({
           {variant === 'create' && (
             <Button
               disabled={disabled || isEmpty}
-              isLoading={processing}
               size={'iconSm'}
               className={cn(
                 'ml-auto',

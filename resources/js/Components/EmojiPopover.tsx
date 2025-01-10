@@ -40,7 +40,7 @@ export default function ({
           delayDuration={50}
         >
           <PopoverTrigger asChild>
-            <TooltipTrigger>{children}</TooltipTrigger>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
           </PopoverTrigger>
 
           <TooltipContent className='border border-white/5 bg-black text-white'>
