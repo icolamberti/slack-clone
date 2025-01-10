@@ -1,4 +1,5 @@
 import ChannelHeader from '@/Components/Channels/ChannelHeader'
+import ChatInput from '@/Components/Channels/ChatInput'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -32,6 +33,10 @@ export default function ({ workspace, channel }: Props) {
           <ResizablePanel minSize={20}>
             <div className='flex h-full flex-col'>
               <ChannelHeader />
+
+              <div className='flex-1' />
+
+              <ChatInput placeholder={`Message # ${channel!.name}`} />
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
