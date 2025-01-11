@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\JoinWorkspaceController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,13 @@ Route::prefix('workspaces')
         Route::delete('{channel}', [ChannelController::class, 'destroy'])
           ->middleware(['workspace.admin'])
           ->name('destroy');
+
+        // Messages
+        Route::prefix('{channel}/messages')
+          ->name('messages.')
+          ->group(function () {
+            Route::post('', [MessageController::class, 'store'])->name('store');
+          });
       });
 
     // Join workspace

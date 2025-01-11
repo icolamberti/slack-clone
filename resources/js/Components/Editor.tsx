@@ -44,7 +44,7 @@ const Editor = ({
   const [image, setImage] = useState<File | null>(null)
   const [isToolbarVisible, setIsToolbarVisible] = useState(true)
 
-  const isEmpty = text.trim().length === 0
+  const isEmpty = !image && text.trim().length === 0
 
   const toggleToolbar = () => {
     setIsToolbarVisible(current => !current)
@@ -98,8 +98,19 @@ const Editor = ({
             enter: {
               key: 'Enter',
               handler: () => {
-                //TODO: submit form
-                return
+                const text = quill.getText()
+                const addedImage = imageElementRef.current?.files?.[0] || null
+
+                const isEmpty = !addedImage && text.trim().length === 0
+
+                if (isEmpty) return
+
+                const body = JSON.stringify(quill.getContents())
+
+                submitRef.current?.({
+                  body,
+                  image: addedImage,
+                })
               },
             },
             shift_enter: {
@@ -156,7 +167,12 @@ const Editor = ({
         className='hidden'
       />
 
-      <div className='flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-slate-300 focus-within:shadow-sm'>
+      <div
+        className={cn(
+          'flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-slate-300 focus-within:shadow-sm',
+          disabled && 'opacity-50',
+        )}
+      >
         <div ref={containerRef} className='ql-custom h-full' />
 
         {!!image && (
@@ -221,7 +237,7 @@ const Editor = ({
               <Button
                 variant={'outline'}
                 size={'sm'}
-                onClick={() => {}}
+                onClick={onCancel}
                 disabled={disabled}
               >
                 Cancel
@@ -230,7 +246,13 @@ const Editor = ({
               <Button
                 disabled={disabled || isEmpty}
                 size={'sm'}
-                onClick={() => {}}
+                onClick={() => {
+                  onSubmit({
+                    body: JSON.stringify(quillRef.current?.getContents()),
+                    image,
+                  })
+                }}
+                isLoading={disabled}
                 className='bg-[#007a5a] text-white hover:bg-[#007a5a]/80'
               >
                 Save
@@ -248,7 +270,13 @@ const Editor = ({
                   ? 'bg-white text-muted-foreground hover:bg-white'
                   : 'bg-[#007a5a] text-white hover:bg-[#007a5a]/80',
               )}
-              onClick={() => {}}
+              onClick={() => {
+                onSubmit({
+                  body: JSON.stringify(quillRef.current?.getContents()),
+                  image,
+                })
+              }}
+              isLoading={disabled}
             >
               <MdSend className='size-4' />
             </Button>
