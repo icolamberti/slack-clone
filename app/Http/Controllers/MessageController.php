@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-  public function store(string $id, string $channel, Request $request)
+  public function store(string $id, Request $request)
   {
     $request->validate([
       'body' => 'required',
@@ -25,11 +26,11 @@ class MessageController extends Controller
 
     $workspace = Workspace::findOrFail($id);
 
-    $channel = $workspace->channels()->findOrFail($channel);
-
-    $message = $channel->messages()->create([
-      'workspace_id' => $workspace->id,
+    $message = $workspace->messages()->create([
       'user_id' => Auth::id(),
+      'channel_id' => $request->channel,
+      'conversation_id' => $request->conversation,
+      'parent_id' => $request->parent_id,
       'body' => $request->body,
     ]);
 
@@ -41,10 +42,5 @@ class MessageController extends Controller
         ['timestamps' => false]
       );
     }
-
-    return to_route('workspaces.channels.show', [
-      $workspace->id,
-      $channel->id,
-    ])->with('success', 'Channel created successfully!');
   }
 }

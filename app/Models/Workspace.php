@@ -18,9 +18,19 @@ class Workspace extends Model
     return $this->hasMany(Channel::class)->orderBy('name');
   }
 
+  public function conversations(): HasMany
+  {
+    return $this->hasMany(Conversation::class);
+  }
+
   public function members(): HasMany
   {
     return $this->hasMany(Member::class);
+  }
+
+  public function messages(): HasMany
+  {
+    return $this->hasMany(Message::class);
   }
 
   public function user(): BelongsTo
