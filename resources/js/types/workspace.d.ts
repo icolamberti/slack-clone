@@ -17,6 +17,7 @@ export type Member = {
 export type Channel = {
   id: string
   name: string
+  created_at: string
   messages: Message[]
 }
 

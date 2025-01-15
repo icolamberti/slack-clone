@@ -1,4 +1,5 @@
 import { Message } from '@/types/workspace'
+import { usePage } from '@inertiajs/react'
 import { format, isToday, isYesterday } from 'date-fns'
 import Hint from './Hint'
 import Renderer from './Renderer'
@@ -8,9 +9,22 @@ import { Avatar, AvatarFallback, AvatarImage } from './Ui/avatar'
 type Props = {
   message: Message
   isCompact: boolean
+  hideThreadButton: boolean
+  isEditing: boolean
+  setEditingId: (id: number | null) => void
 }
 
-export default function ({ message, isCompact }: Props) {
+export default function ({
+  message,
+  isCompact,
+  hideThreadButton,
+  isEditing,
+  setEditingId,
+}: Props) {
+  const { user } = usePage().props.auth
+
+  const isAuthor = message.user.id === user.id
+
   const avatarFallback = message.user.name.charAt(0).toUpperCase()
 
   const formatFullTime = (date: Date) => {

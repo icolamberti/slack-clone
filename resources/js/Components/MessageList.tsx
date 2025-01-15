@@ -1,14 +1,19 @@
 import { Message } from '@/types/workspace'
 import { differenceInMinutes, format, isToday, isYesterday } from 'date-fns'
+import { useState } from 'react'
+import ChannelHero from './Channels/ChannelHero'
 import MessageComponent from './Message'
 
 type Props = {
   messages: Message[]
+  variant?: 'channel' | 'thread' | 'conversation'
 }
 
 const TIME_THRESHOLD = 5
 
-export default function ({ messages }: Props) {
+export default function ({ messages, variant = 'channel' }: Props) {
+  const [editingId, setEditingId] = useState<number | null>(null)
+
   const formatDateLabel = (dateStr: string) => {
     const date = new Date(dateStr)
 
@@ -63,11 +68,15 @@ export default function ({ messages }: Props) {
                 key={message.id}
                 message={message}
                 isCompact={isCompact}
+                hideThreadButton={variant === 'thread'}
+                isEditing={editingId === message.id}
+                setEditingId={setEditingId}
               />
             )
           })}
         </div>
       ))}
+      {variant === 'channel' && <ChannelHero />}
     </div>
   )
 }
