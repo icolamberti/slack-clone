@@ -2,6 +2,7 @@ import { Message } from '@/types/workspace'
 import { usePage } from '@inertiajs/react'
 import { format, isToday, isYesterday } from 'date-fns'
 import Hint from './Hint'
+import MessageToolbar from './MessageToolbar'
 import Renderer from './Renderer'
 import Thumbnail from './Thumbnail'
 import { Avatar, AvatarFallback, AvatarImage } from './Ui/avatar'
@@ -97,6 +98,18 @@ export default function ({
           )}
         </div>
       </div>
+
+      {!isEditing && (
+        <MessageToolbar
+          isAuthor={isAuthor}
+          isPending={false}
+          handleEdit={() => setEditingId(message.id)}
+          handleThread={() => {}}
+          handleDelete={() => {}}
+          handleReaction={() => {}}
+          hideThreadButton={hideThreadButton}
+        />
+      )}
     </div>
   )
 }
