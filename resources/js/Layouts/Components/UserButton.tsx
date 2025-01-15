@@ -14,11 +14,9 @@ export default function () {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className='relative outline-none'>
-        <Avatar className='size-10 rounded-md transition hover:opacity-75'>
+        <Avatar className='size-10 transition hover:opacity-75'>
           <AvatarImage alt={user.name} src={user.avatar} />
-          <AvatarFallback className='rounded-md bg-sky-500 text-white'>
-            {user.name.charAt(0).toUpperCase()}
-          </AvatarFallback>
+          <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 

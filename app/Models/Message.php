@@ -27,4 +27,9 @@ class Message extends Model
   {
     return $this->hasMany(Reaction::class);
   }
+
+  public function replies(): HasMany
+  {
+    return $this->hasMany(Message::class, 'parent_id');
+  }
 }

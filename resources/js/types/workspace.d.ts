@@ -17,4 +17,19 @@ export type Member = {
 export type Channel = {
   id: string
   name: string
+  messages: Message[]
 }
+
+export type Message = {
+  id: number
+  body: string
+  image?: string
+  created_at: string
+  updated_at: string
+  user: User
+  workspace: Workspace
+  channel: Channel
+  reactions: Reaction[]
+}
+
+export type Reaction = {}

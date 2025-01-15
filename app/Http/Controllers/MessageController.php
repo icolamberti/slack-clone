@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
