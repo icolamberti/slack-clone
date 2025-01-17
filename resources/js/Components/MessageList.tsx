@@ -1,17 +1,35 @@
+import { useWorkspace } from '@/Context/WorkspaceContext'
+import { cn } from '@/Lib/utils'
+import { Metadata } from '@/types/pagination'
 import { Message } from '@/types/workspace'
+import axios from 'axios'
 import { differenceInMinutes, format, isToday, isYesterday } from 'date-fns'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ChannelHero from './Channels/ChannelHero'
 import MessageComponent from './Message'
+import { Button } from './Ui/button'
 
 type Props = {
-  messages: Message[]
   variant?: 'channel' | 'thread' | 'conversation'
 }
 
 const TIME_THRESHOLD = 5
 
-export default function ({ messages, variant = 'channel' }: Props) {
+export default function ({ variant = 'channel' }: Props) {
+  const { workspace, channel } = useWorkspace()
+
+  const [messages, setMessages] = useState<Message[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [hasMore, setHasMore] = useState<boolean>(false)
+  const [metadata, setMetadata] = useState<Metadata>({
+    current_page: 0,
+    last_page: 0,
+    next_page_url: '',
+    links: [],
+    length: 0,
+    total: 0,
+  })
+
   const [editingId, setEditingId] = useState<number | null>(null)
 
   const formatDateLabel = (dateStr: string) => {
@@ -40,6 +58,36 @@ export default function ({ messages, variant = 'channel' }: Props) {
     },
     {} as Record<string, Message[]>,
   )
+
+  const updateMessages = (data: any) => {
+    setMessages(prevData => prevData.concat(data.messages.data))
+    setMetadata({
+      current_page: data.messages.current_page,
+      last_page: data.messages.last_page,
+      next_page_url: data.messages.next_page_url,
+      links: data.messages.links,
+      length: data.messages.data.length,
+      total: data.messages.total,
+    })
+    setHasMore(
+      data.messages.current_page < data.messages.last_page ? true : false,
+    )
+  }
+
+  const fetchData = (link = metadata.next_page_url) => {
+    setIsLoading(true)
+
+    axios
+      .get(link)
+      .then(res => {
+        updateMessages(res.data)
+      })
+      .finally(() => setIsLoading(false))
+  }
+
+  useEffect(() => {
+    fetchData(`/workspaces/${workspace.id}/channels/${channel!.id}/messages`)
+  }, [])
 
   return (
     <div className='messages-scrollbar flex flex-1 flex-col-reverse overflow-y-auto pb-4'>
@@ -76,6 +124,19 @@ export default function ({ messages, variant = 'channel' }: Props) {
           })}
         </div>
       ))}
+
+      {hasMore && (
+        <div className='flex items-center justify-center'>
+          <Button
+            onClick={() => fetchData()}
+            isLoading={isLoading}
+            className={cn('rounded-full', isLoading && 'size-10 p-0')}
+          >
+            Load more
+          </Button>
+        </div>
+      )}
+
       {variant === 'channel' && <ChannelHero />}
     </div>
   )

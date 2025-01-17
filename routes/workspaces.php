@@ -47,6 +47,12 @@ Route::prefix('workspaces')
         Route::delete('{channel}', [ChannelController::class, 'destroy'])
           ->middleware(['workspace.admin'])
           ->name('destroy');
+
+        // Message List
+        Route::get('{channel}/messages', [
+          ChannelController::class,
+          'messages',
+        ])->name('messages');
       });
 
     // Messages

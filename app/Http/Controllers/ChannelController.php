@@ -8,6 +8,24 @@ use Str;
 
 class ChannelController extends Controller
 {
+  public function messages(string $id, string $channel)
+  {
+    $workspace = Workspace::findOrFail($id);
+
+    $channel = $workspace->channels()->findOrFail($channel);
+
+    $messages = $channel
+      ->messages()
+      ->with(['user', 'reactions', 'replies'])
+      ->whereNull('parent_id')
+      ->orderByDesc('created_at')
+      ->paginate(20);
+
+    return [
+      'messages' => $messages,
+    ];
+  }
+
   public function show(string $id, string $channel)
   {
     $workspace = Workspace::with([

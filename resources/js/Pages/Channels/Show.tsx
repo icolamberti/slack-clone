@@ -9,15 +9,14 @@ import {
 import WorkspaceSidebar from '@/Components/Workspaces/WorkspaceSidebar'
 import { WorkspaceProvider } from '@/Context/WorkspaceContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Channel, Message, Workspace } from '@/types/workspace'
+import { Channel, Workspace } from '@/types/workspace'
 
 type Props = {
   workspace: Workspace
   channel: Channel
-  messages: Message[]
 }
 
-export default function ({ workspace, channel, messages }: Props) {
+export default function ({ workspace, channel }: Props) {
   return (
     <WorkspaceProvider workspace={workspace} channel={channel}>
       <AuthenticatedLayout>
@@ -36,7 +35,7 @@ export default function ({ workspace, channel, messages }: Props) {
             <div className='flex h-full flex-col'>
               <ChannelHeader />
 
-              <MessageList messages={messages} />
+              <MessageList />
 
               <ChatInput placeholder={`Message # ${channel!.name}`} />
             </div>
