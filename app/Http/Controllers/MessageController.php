@@ -69,9 +69,37 @@ class MessageController extends Controller
   {
     $workspace = Workspace::findOrFail($id);
 
-    $message = $workspace->messages()->findOrFail($message);
+    $message = $workspace
+      ->messages()
+      ->where('user_id', Auth::id())
+      ->findOrFail($message);
 
     $message->delete();
+
+    // TODO: event broadcasting
+  }
+
+  public function addReaction(string $id, string $message, Request $request)
+  {
+    $workspace = Workspace::findOrFail($id);
+
+    $message = $workspace->messages()->findOrFail($message);
+
+    $reaction = $message->reactions()->where('user_id', Auth::id())->first();
+
+    if ($reaction && $reaction->value === $request->value) {
+      $reaction->delete();
+    } else {
+      $message->reactions()->updateOrCreate(
+        [
+          'workspace_id' => $workspace->id,
+          'user_id' => Auth::id(),
+        ],
+        [
+          'value' => $request->value,
+        ]
+      );
+    }
 
     // TODO: event broadcasting
   }

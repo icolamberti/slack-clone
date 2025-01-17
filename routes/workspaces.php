@@ -51,6 +51,7 @@ Route::prefix('workspaces')
 
     // Messages
     Route::prefix('{id}/messages')
+      ->middleware(['workspace.member'])
       ->name('messages.')
       ->group(function () {
         Route::post('', [MessageController::class, 'store'])->name('store');
@@ -60,6 +61,12 @@ Route::prefix('workspaces')
         Route::delete('{message}', [MessageController::class, 'destroy'])->name(
           'destroy'
         );
+
+        // Reactions
+        Route::post('{message}/reactions', [
+          MessageController::class,
+          'addReaction',
+        ])->name('reactions');
       });
 
     // Join workspace

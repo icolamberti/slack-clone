@@ -33,4 +33,8 @@ export type Message = {
   reactions: Reaction[]
 }
 
-export type Reaction = {}
+export type Reaction = {
+  id: number
+  user_id: string
+  value: string
+}

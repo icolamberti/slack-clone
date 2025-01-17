@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import Editor from './Editor'
 import Hint from './Hint'
 import MessageToolbar from './MessageToolbar'
+import Reactions from './Reactions'
 import Renderer from './Renderer'
 import Thumbnail from './Thumbnail'
 import { Avatar, AvatarFallback, AvatarImage } from './Ui/avatar'
@@ -46,6 +47,19 @@ export default function ({
   }
 
   const isUpdated = message.updated_at !== message.created_at
+
+  const handleReaction = (value: string) => {
+    router.post(
+      `/workspaces/${workspace.id}/messages/${message.id}/reactions`,
+      { value: value },
+      {
+        preserveScroll: true,
+        onError: () => {
+          toast.error('Failed to toggle reaction')
+        },
+      },
+    )
+  }
 
   const handleUpdate = ({ body }: { body: string }) => {
     setUpdateProcessing(true)
@@ -138,6 +152,11 @@ export default function ({
                     (edited)
                   </span>
                 )}
+
+                <Reactions
+                  reactions={message.reactions}
+                  onChange={handleReaction}
+                />
               </div>
             )}
           </div>
@@ -149,7 +168,7 @@ export default function ({
               handleEdit={() => setEditingId(message.id)}
               handleThread={() => {}}
               handleDelete={handleDestroy}
-              handleReaction={() => {}}
+              handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
             />
           )}
@@ -217,6 +236,11 @@ export default function ({
               {isUpdated && (
                 <span className='text-xs text-muted-foreground'>(edited)</span>
               )}
+
+              <Reactions
+                reactions={message.reactions}
+                onChange={handleReaction}
+              />
             </div>
           )}
         </div>
@@ -228,7 +252,7 @@ export default function ({
             handleEdit={() => setEditingId(message.id)}
             handleThread={() => {}}
             handleDelete={handleDestroy}
-            handleReaction={() => {}}
+            handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />
         )}
