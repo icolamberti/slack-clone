@@ -26,8 +26,8 @@ export default function ({ placeholder }: Props) {
     editorRef?.current?.enable(false)
 
     router.post(
-      `/workspaces/${workspace.id}/channels/${channel!.id}/messages`,
-      { body, image },
+      `/workspaces/${workspace.id}/messages`,
+      { body, image, channel: channel!.id },
       {
         preserveScroll: true,
         onSuccess: () => {

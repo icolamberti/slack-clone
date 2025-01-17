@@ -47,13 +47,19 @@ Route::prefix('workspaces')
         Route::delete('{channel}', [ChannelController::class, 'destroy'])
           ->middleware(['workspace.admin'])
           ->name('destroy');
+      });
 
-        // Messages
-        Route::prefix('{channel}/messages')
-          ->name('messages.')
-          ->group(function () {
-            Route::post('', [MessageController::class, 'store'])->name('store');
-          });
+    // Messages
+    Route::prefix('{id}/messages')
+      ->name('messages.')
+      ->group(function () {
+        Route::post('', [MessageController::class, 'store'])->name('store');
+        Route::patch('{message}', [MessageController::class, 'update'])->name(
+          'update'
+        );
+        Route::delete('{message}', [MessageController::class, 'destroy'])->name(
+          'destroy'
+        );
       });
 
     // Join workspace

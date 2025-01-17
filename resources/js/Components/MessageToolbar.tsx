@@ -41,7 +41,12 @@ export default function ({
 
         {!hideThreadButton && (
           <Hint label='Reply in thread'>
-            <Button variant={'ghost'} size={'iconSm'} isLoading={isPending}>
+            <Button
+              variant={'ghost'}
+              size={'iconSm'}
+              isLoading={isPending}
+              onClick={handleThread}
+            >
               <MessageSquareTextIcon className='size-4' />
             </Button>
           </Hint>
@@ -50,13 +55,23 @@ export default function ({
         {isAuthor && (
           <>
             <Hint label='Edit message'>
-              <Button variant={'ghost'} size={'iconSm'} isLoading={isPending}>
+              <Button
+                variant={'ghost'}
+                size={'iconSm'}
+                isLoading={isPending}
+                onClick={handleEdit}
+              >
                 <PencilIcon className='size-4' />
               </Button>
             </Hint>
 
             <Hint label='Delete message'>
-              <Button variant={'ghost'} size={'iconSm'} isLoading={isPending}>
+              <Button
+                variant={'ghost'}
+                size={'iconSm'}
+                isLoading={isPending}
+                onClick={handleDelete}
+              >
                 <TrashIcon className='size-4' />
               </Button>
             </Hint>

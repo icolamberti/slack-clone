@@ -41,5 +41,38 @@ class MessageController extends Controller
         ['timestamps' => false]
       );
     }
+
+    // TODO: event broadcasting
+  }
+
+  public function update(string $id, string $message, Request $request)
+  {
+    $request->validate([
+      'body' => 'required',
+    ]);
+
+    $workspace = Workspace::findOrFail($id);
+
+    $message = $workspace
+      ->messages()
+      ->where('user_id', Auth::id())
+      ->findOrFail($message);
+
+    $message->update([
+      'body' => $request->body,
+    ]);
+
+    // TODO: event broadcasting
+  }
+
+  public function destroy(string $id, string $message)
+  {
+    $workspace = Workspace::findOrFail($id);
+
+    $message = $workspace->messages()->findOrFail($message);
+
+    $message->delete();
+
+    // TODO: event broadcasting
   }
 }
