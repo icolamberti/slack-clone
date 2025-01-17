@@ -16,7 +16,13 @@ class ChannelController extends Controller
 
     $messages = $channel
       ->messages()
-      ->with(['user', 'reactions', 'replies'])
+      ->with([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ])
       ->whereNull('parent_id')
       ->orderByDesc('created_at')
       ->paginate(20);

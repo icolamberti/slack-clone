@@ -14,7 +14,7 @@ return new class extends Migration {
       $table->id();
       $table->foreignUuid('workspace_id')->constrained()->onDelete('cascade');
       $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-      $table->foreignId('message_id')->constrained()->onDelete('cascade');
+      $table->foreignUuid('message_id')->constrained()->onDelete('cascade');
       $table->string('value');
       $table->timestamps();
     });

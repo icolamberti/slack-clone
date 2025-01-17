@@ -11,14 +11,19 @@ import { Button } from './Ui/button'
 
 type Props = {
   variant?: 'channel' | 'thread' | 'conversation'
+  messages: Message[]
+  setMessages: (messages: Message[]) => void
 }
 
 const TIME_THRESHOLD = 5
 
-export default function ({ variant = 'channel' }: Props) {
+export default function ({
+  variant = 'channel',
+  messages,
+  setMessages,
+}: Props) {
   const { workspace, channel } = useWorkspace()
 
-  const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [hasMore, setHasMore] = useState<boolean>(false)
   const [metadata, setMetadata] = useState<Metadata>({
@@ -30,7 +35,7 @@ export default function ({ variant = 'channel' }: Props) {
     total: 0,
   })
 
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   const formatDateLabel = (dateStr: string) => {
     const date = new Date(dateStr)
@@ -60,7 +65,7 @@ export default function ({ variant = 'channel' }: Props) {
   )
 
   const updateMessages = (data: any) => {
-    setMessages(prevData => prevData.concat(data.messages.data))
+    setMessages([...messages, ...(data.messages.data as Message[])])
     setMetadata({
       current_page: data.messages.current_page,
       last_page: data.messages.last_page,

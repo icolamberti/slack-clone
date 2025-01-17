@@ -22,7 +22,7 @@ export type Channel = {
 }
 
 export type Message = {
-  id: number
+  id: string
   body: string
   image?: string
   created_at: string

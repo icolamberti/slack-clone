@@ -11,7 +11,7 @@ return new class extends Migration {
   public function up(): void
   {
     Schema::create('messages', function (Blueprint $table) {
-      $table->id();
+      $table->uuid('id')->primary();
       $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
       $table->foreignUuid('workspace_id')->constrained()->cascadeOnDelete();
       $table
@@ -20,7 +20,7 @@ return new class extends Migration {
         ->constrained()
         ->cascadeOnDelete();
       $table
-        ->foreignId('parent_id')
+        ->foreignUuid('parent_id')
         ->nullable()
         ->constrained('messages')
         ->cascadeOnDelete();

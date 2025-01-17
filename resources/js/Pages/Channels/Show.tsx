@@ -1,6 +1,7 @@
 import ChannelHeader from '@/Components/Channels/ChannelHeader'
 import ChatInput from '@/Components/Channels/ChatInput'
 import MessageList from '@/Components/MessageList'
+import Thread from '@/Components/Messages/Thread'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -8,8 +9,10 @@ import {
 } from '@/Components/Ui/resizable'
 import WorkspaceSidebar from '@/Components/Workspaces/WorkspaceSidebar'
 import { WorkspaceProvider } from '@/Context/WorkspaceContext'
+import { usePanel } from '@/Hooks/UsePanel'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Channel, Workspace } from '@/types/workspace'
+import { Channel, Message, Workspace } from '@/types/workspace'
+import { useState } from 'react'
 
 type Props = {
   workspace: Workspace
@@ -17,6 +20,14 @@ type Props = {
 }
 
 export default function ({ workspace, channel }: Props) {
+  const { parentMessageId } = usePanel()
+
+  const [messages, setMessages] = useState<Message[]>([])
+
+  const showPanel = !!parentMessageId
+
+  const message = messages.find(message => message.id === parentMessageId)
+
   return (
     <WorkspaceProvider workspace={workspace} channel={channel}>
       <AuthenticatedLayout>
@@ -35,11 +46,25 @@ export default function ({ workspace, channel }: Props) {
             <div className='flex h-full flex-col'>
               <ChannelHeader />
 
-              <MessageList />
+              <MessageList
+                key={channel.id}
+                messages={messages}
+                setMessages={setMessages}
+              />
 
               <ChatInput placeholder={`Message # ${channel!.name}`} />
             </div>
           </ResizablePanel>
+
+          {showPanel && (
+            <>
+              <ResizableHandle withHandle />
+
+              <ResizablePanel defaultSize={29} minSize={20}>
+                <Thread message={message} />
+              </ResizablePanel>
+            </>
+          )}
         </ResizablePanelGroup>
       </AuthenticatedLayout>
     </WorkspaceProvider>
