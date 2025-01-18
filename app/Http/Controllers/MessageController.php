@@ -2,12 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+  public function index(Request $request)
+  {
+    $workspace = $request->id;
+    $channel = $request->channel;
+    $conversation = $request->conversation;
+    $parent = $request->parent;
+
+    if (!$workspace || (!$channel && !$conversation && $parent)) {
+      abort(404);
+    }
+
+    $messages = Message::query()
+      ->with([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ])
+      ->where('workspace_id', $workspace)
+      ->when($channel, function ($query, $channel) {
+        $query->where('channel_id', $channel);
+      })
+      ->when($parent, function ($query, $parent) {
+        $query->where('parent_id', $parent);
+      })
+      ->when($conversation, function ($query, $conversation) {
+        $query->where('conversation_id', $conversation);
+      })
+      ->when(!$parent, function ($query) {
+        $query->whereNull('parent_id');
+      })
+      ->orderByDesc('created_at')
+      ->paginate(20);
+
+    return [
+      'messages' => $messages,
+    ];
+  }
+
   public function store(string $id, Request $request)
   {
     $request->validate([

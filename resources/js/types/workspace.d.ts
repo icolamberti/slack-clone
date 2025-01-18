@@ -31,6 +31,7 @@ export type Message = {
   workspace: Workspace
   channel: Channel
   reactions: Reaction[]
+  replies: Message[]
 }
 
 export type Reaction = {

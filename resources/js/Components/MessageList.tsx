@@ -91,7 +91,7 @@ export default function ({
   }
 
   useEffect(() => {
-    fetchData(`/workspaces/${workspace.id}/channels/${channel!.id}/messages`)
+    fetchData(`/workspaces/${workspace.id}/messages?channel=${channel!.id}`)
   }, [])
 
   return (

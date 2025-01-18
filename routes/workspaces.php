@@ -47,12 +47,6 @@ Route::prefix('workspaces')
         Route::delete('{channel}', [ChannelController::class, 'destroy'])
           ->middleware(['workspace.admin'])
           ->name('destroy');
-
-        // Message List
-        Route::get('{channel}/messages', [
-          ChannelController::class,
-          'messages',
-        ])->name('messages');
       });
 
     // Messages
@@ -74,6 +68,11 @@ Route::prefix('workspaces')
           'addReaction',
         ])->name('reactions');
       });
+
+    // Message List
+    Route::get('{id}/messages', [MessageController::class, 'index'])
+      ->middleware(['workspace.member'])
+      ->name('index');
 
     // Join workspace
     Route::get('{id}/join', [JoinWorkspaceController::class, 'create'])->name(
