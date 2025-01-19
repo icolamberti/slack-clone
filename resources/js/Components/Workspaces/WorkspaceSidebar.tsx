@@ -15,7 +15,7 @@ import WorkspaceSection from './WorkspaceSection'
 
 export default function () {
   const { user } = usePage().props.auth
-  const { workspace, channel } = useWorkspace()
+  const { workspace, channel, conversation } = useWorkspace()
 
   const isAdmin = useIsAdmin(workspace, user)
 
@@ -67,6 +67,9 @@ export default function () {
             id={item.user_id}
             label={item.user.name}
             image={item.user.avatar}
+            variant={
+              item.user_id === conversation?.user.id ? 'active' : 'default'
+            }
           />
         ))}
       </WorkspaceSection>

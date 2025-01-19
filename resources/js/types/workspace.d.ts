@@ -6,6 +6,7 @@ export type Workspace = {
   join_code: string
   members: Member[]
   channels: Channel[]
+  conversations: Conversation[]
 }
 
 export type Member = {
@@ -19,6 +20,14 @@ export type Channel = {
   name: string
   created_at: string
   messages: Message[]
+}
+
+export type Conversation = {
+  id: string
+  workspace_id: string
+  user_one_id: string
+  user_two_id: string
+  user: User
 }
 
 export type Message = {

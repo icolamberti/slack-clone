@@ -7,12 +7,13 @@ import { AlertTriangleIcon, XIcon } from 'lucide-react'
 import Quill from 'quill'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import Editor from '../Editor'
-import MessageComponent from '../Message'
-import { Button } from '../Ui/button'
+import Editor from './Editor'
+import MessageComponent from './Message'
+import { Button } from './Ui/button'
 
 type Props = {
   message?: Message
+  onDestroyMessage: (messageId: string) => void
 }
 
 type HandleSubmitProps = {
@@ -22,8 +23,8 @@ type HandleSubmitProps = {
 
 const TIME_THRESHOLD = 5
 
-export default function ({ message }: Props) {
-  const { workspace, channel } = useWorkspace()
+export default function ({ message, onDestroyMessage }: Props) {
+  const { workspace, channel, conversation } = useWorkspace()
   const { onClose } = usePanel()
   const editorRef = useRef<Quill | null>(null)
 
@@ -64,7 +65,13 @@ export default function ({ message }: Props) {
 
     router.post(
       `/workspaces/${workspace.id}/messages`,
-      { body, image, channel: channel!.id, parent_id: message?.id },
+      {
+        body,
+        image,
+        channel: channel?.id,
+        parent_id: message?.id,
+        conversation: conversation?.id,
+      },
       {
         preserveScroll: true,
         onSuccess: () => {
@@ -136,6 +143,7 @@ export default function ({ message }: Props) {
                 <MessageComponent
                   key={reply.id}
                   message={reply}
+                  onDestroyMessage={onDestroyMessage}
                   hideThreadButton
                   isCompact={isCompact}
                   isEditing={editingId === reply.id}
@@ -148,6 +156,7 @@ export default function ({ message }: Props) {
 
         <MessageComponent
           message={message}
+          onDestroyMessage={onDestroyMessage}
           hideThreadButton
           isEditing={editingId === message.id}
           setEditingId={setEditingId}

@@ -1,9 +1,10 @@
-import { Channel, Workspace } from '@/types/workspace'
+import { Channel, Conversation, Workspace } from '@/types/workspace'
 import { createContext, PropsWithChildren, useContext } from 'react'
 
 interface WorkspaceContextProps {
   workspace: Workspace
   channel?: Channel
+  conversation?: Conversation
 }
 
 const WorkspaceContext = createContext<WorkspaceContextProps | undefined>(
@@ -14,9 +15,10 @@ export const WorkspaceProvider = ({
   children,
   workspace,
   channel,
+  conversation,
 }: PropsWithChildren<WorkspaceContextProps>) => {
   return (
-    <WorkspaceContext.Provider value={{ workspace, channel }}>
+    <WorkspaceContext.Provider value={{ workspace, channel, conversation }}>
       {children}
     </WorkspaceContext.Provider>
   )

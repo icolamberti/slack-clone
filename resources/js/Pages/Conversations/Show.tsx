@@ -1,5 +1,5 @@
-import ChannelHeader from '@/Components/Channels/ChannelHeader'
-import ChatInput from '@/Components/Channels/ChatInput'
+import ChatInput from '@/Components/Conversations/ChatInput'
+import ConversationHeader from '@/Components/Conversations/ConversationHeader'
 import MessageList from '@/Components/MessageList'
 import Thread from '@/Components/Thread'
 import {
@@ -11,20 +11,20 @@ import WorkspaceSidebar from '@/Components/Workspaces/WorkspaceSidebar'
 import { WorkspaceProvider } from '@/Context/WorkspaceContext'
 import { usePanel } from '@/Hooks/UsePanel'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Channel, Message, Workspace } from '@/types/workspace'
+import { Conversation, Message, Workspace } from '@/types/workspace'
 import { useState } from 'react'
 
 type Props = {
   workspace: Workspace
-  channel: Channel
+  conversation: Conversation
 }
 
-export default function ({ workspace, channel }: Props) {
+export default function ({ workspace, conversation }: Props) {
   const { parentMessageId } = usePanel()
 
   const [messages, setMessages] = useState<Message[]>([])
 
-  const listenChannel = `channel.messages.${channel.id}`
+  const listenChannel = `conversation.messages.${conversation.id}`
 
   const showPanel = !!parentMessageId
 
@@ -44,7 +44,7 @@ export default function ({ workspace, channel }: Props) {
   }
 
   return (
-    <WorkspaceProvider workspace={workspace} channel={channel}>
+    <WorkspaceProvider workspace={workspace} conversation={conversation}>
       <AuthenticatedLayout>
         <ResizablePanelGroup direction='horizontal' autoSaveId='slack-layout'>
           <ResizablePanel
@@ -59,16 +59,18 @@ export default function ({ workspace, channel }: Props) {
 
           <ResizablePanel minSize={20}>
             <div className='flex h-full flex-col'>
-              <ChannelHeader />
+              <ConversationHeader onClick={() => {}} />
 
               <MessageList
+                key={conversation.id}
+                variant='conversation'
                 listenChannel={listenChannel}
                 messages={messages}
                 setMessages={setMessages}
                 onDestroyMessage={onDestroyMessage}
               />
 
-              <ChatInput placeholder={`Message # ${channel!.name}`} />
+              <ChatInput placeholder={`Message ${conversation.user.name}`} />
             </div>
           </ResizablePanel>
 

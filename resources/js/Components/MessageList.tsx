@@ -6,23 +6,28 @@ import { Message } from '@/types/workspace'
 import axios from 'axios'
 import { differenceInMinutes, format, isToday, isYesterday } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { Button } from '../Ui/button'
-import ChannelHero from './ChannelHero'
+import ChannelHero from './Channels/ChannelHero'
+import ConversationHero from './Conversations/ConversationHero'
+import { Button } from './Ui/button'
 
 type Props = {
-  variant?: 'channel' | 'thread' | 'conversation'
+  variant?: 'channel' | 'conversation'
+  listenChannel: string
   messages: Message[]
   setMessages: (messages: Message[]) => void
+  onDestroyMessage: (messageId: string) => void
 }
 
 const TIME_THRESHOLD = 5
 
 export default function ({
   variant = 'channel',
+  listenChannel,
   messages,
   setMessages,
+  onDestroyMessage,
 }: Props) {
-  const { workspace, channel } = useWorkspace()
+  const { workspace, channel, conversation } = useWorkspace()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [hasMore, setHasMore] = useState<boolean>(false)
@@ -64,10 +69,6 @@ export default function ({
     {} as Record<string, Message[]>,
   )
 
-  const onDestroyMessage = (messageId: string) => {
-    setMessages(messages.filter(message => message.id !== messageId))
-  }
-
   const updateMessages = (data: any) => {
     setMessages([
       ...messages,
@@ -106,7 +107,7 @@ export default function ({
       .finally(() => setIsLoading(false))
   }
 
-  window.Echo.channel(`channel.messages.${channel!.id}`).listen(
+  window.Echo.channel(listenChannel).listen(
     '.message-sent',
     (e: { message: Message }) => {
       updateMessage(e.message)
@@ -127,7 +128,15 @@ export default function ({
     })
 
   useEffect(() => {
-    fetchData(`/workspaces/${workspace.id}/messages?channel=${channel!.id}`)
+    let url
+
+    if (variant === 'conversation') {
+      url = `/workspaces/${workspace.id}/messages?conversation=${conversation!.id}`
+    } else if (variant === 'channel') {
+      url = `/workspaces/${workspace.id}/messages?channel=${channel!.id}`
+    }
+
+    fetchData(url)
   }, [])
 
   return (
@@ -158,7 +167,7 @@ export default function ({
                 message={message}
                 onDestroyMessage={onDestroyMessage}
                 isCompact={isCompact}
-                hideThreadButton={variant === 'thread'}
+                hideThreadButton={false}
                 isEditing={editingId === message.id}
                 setEditingId={setEditingId}
               />
@@ -180,6 +189,8 @@ export default function ({
       )}
 
       {variant === 'channel' && <ChannelHero />}
+
+      {variant === 'conversation' && <ConversationHero />}
     </div>
   )
 }

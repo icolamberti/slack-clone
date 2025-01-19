@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\JoinWorkspaceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\WorkspaceController;
@@ -67,6 +68,14 @@ Route::prefix('workspaces')
           MessageController::class,
           'addReaction',
         ])->name('reactions');
+      });
+
+    // Conversation
+    Route::prefix('{id}/member/{memberId}')
+      ->middleware(['workspace.member'])
+      ->name('conversation.')
+      ->group(function () {
+        Route::get('', [ConversationController::class, 'show'])->name('show');
       });
 
     // Message List

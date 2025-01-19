@@ -18,16 +18,9 @@ class ChannelController extends Controller
 
     $channel = $workspace->channels()->findOrFail($channel);
 
-    $messages = $channel
-      ->messages()
-      ->with(['user', 'reactions', 'replies'])
-      ->whereNull('parent_id')
-      ->get();
-
     return inertia('Channels/Show', [
       'workspace' => $workspace,
       'channel' => $channel,
-      'messages' => $messages,
     ]);
   }
 
