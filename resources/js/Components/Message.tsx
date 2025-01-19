@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './Ui/avatar'
 
 type Props = {
   message: Message
+  onDestroyMessage: (messageId: string) => void
   isCompact?: boolean
   hideThreadButton: boolean
   isEditing: boolean
@@ -25,6 +26,7 @@ type Props = {
 
 export default function ({
   message,
+  onDestroyMessage,
   isCompact,
   hideThreadButton,
   isEditing,
@@ -97,6 +99,9 @@ export default function ({
         _method: 'delete',
       },
       {
+        headers: {
+          'X-Socket-Id': window.Echo.socketId(),
+        },
         preserveScroll: true,
         onSuccess: () => {
           toast.success('Message deleted')
@@ -109,6 +114,7 @@ export default function ({
           toast.error('Failed to delete message')
         },
         onFinish: () => {
+          onDestroyMessage(message.id)
           setDestroyProcessing(false)
         },
       },

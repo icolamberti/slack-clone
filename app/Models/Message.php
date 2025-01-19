@@ -21,6 +21,15 @@ class Message extends Model
     'image',
   ];
 
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::addGlobalScope('order', function ($builder) {
+      $builder->orderByDesc('created_at');
+    });
+  }
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);

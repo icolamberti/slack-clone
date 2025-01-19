@@ -13,13 +13,13 @@ class Channel extends Model
 
   protected $fillable = ['name'];
 
-  public function channel(): BelongsTo
-  {
-    return $this->belongsTo(Workspace::class);
-  }
-
   public function messages(): HasMany
   {
     return $this->hasMany(Message::class);
+  }
+
+  public function workspace(): BelongsTo
+  {
+    return $this->belongsTo(Workspace::class);
   }
 }

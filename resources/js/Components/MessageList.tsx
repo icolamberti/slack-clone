@@ -64,8 +64,20 @@ export default function ({
     {} as Record<string, Message[]>,
   )
 
+  const onDestroyMessage = (messageId: string) => {
+    setMessages(messages.filter(message => message.id !== messageId))
+  }
+
   const updateMessages = (data: any) => {
-    setMessages([...messages, ...(data.messages.data as Message[])])
+    setMessages([
+      ...messages,
+      ...data.messages.data.filter(
+        (newMessage: Message) =>
+          !messages.some(
+            (existingMessage: Message) => existingMessage.id === newMessage.id,
+          ),
+      ),
+    ])
     setMetadata({
       current_page: data.messages.current_page,
       last_page: data.messages.last_page,
@@ -79,6 +91,10 @@ export default function ({
     )
   }
 
+  const updateMessage = (message: Message) => {
+    setMessages([message, ...messages])
+  }
+
   const fetchData = (link = metadata.next_page_url) => {
     setIsLoading(true)
 
@@ -89,6 +105,26 @@ export default function ({
       })
       .finally(() => setIsLoading(false))
   }
+
+  window.Echo.channel(`channel.messages.${channel!.id}`).listen(
+    '.message-sent',
+    (e: { message: Message }) => {
+      updateMessage(e.message)
+    },
+  )
+
+  window.Echo.channel(`message.messages.${workspace.id}`)
+    .listen('.message-updated', (e: { message: Message }) => {
+      setMessages(
+        messages.map(message =>
+          message.id === e.message.id ? { ...message, ...e.message } : message,
+        ),
+      )
+    })
+    .listen('.message-deleted', (e: { messageId: string }) => {
+      console.log(e)
+      setMessages(messages.filter(message => message.id !== e.messageId))
+    })
 
   useEffect(() => {
     fetchData(`/workspaces/${workspace.id}/messages?channel=${channel!.id}`)
@@ -120,6 +156,7 @@ export default function ({
               <MessageComponent
                 key={message.id}
                 message={message}
+                onDestroyMessage={onDestroyMessage}
                 isCompact={isCompact}
                 hideThreadButton={variant === 'thread'}
                 isEditing={editingId === message.id}

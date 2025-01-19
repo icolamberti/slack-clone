@@ -22,7 +22,6 @@ class ChannelController extends Controller
       ->messages()
       ->with(['user', 'reactions', 'replies'])
       ->whereNull('parent_id')
-      ->orderByDesc('created_at')
       ->get();
 
     return inertia('Channels/Show', [

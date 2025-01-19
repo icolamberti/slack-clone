@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageDeleted;
+use App\Events\MessageSent;
+use App\Events\MessageUpdated;
 use App\Models\Message;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
@@ -41,8 +44,8 @@ class MessageController extends Controller
       ->when(!$parent, function ($query) {
         $query->whereNull('parent_id');
       })
-      ->orderByDesc('created_at')
-      ->paginate(20);
+      ->paginate(20)
+      ->appends($request->only('channel', 'conversation', 'parent'));
 
     return [
       'messages' => $messages,
@@ -74,6 +77,14 @@ class MessageController extends Controller
       'body' => $request->body,
     ]);
 
+    $message->load([
+      'user',
+      'reactions',
+      'replies',
+      'replies.user',
+      'replies.reactions',
+    ]);
+
     if ($request->hasFile('image')) {
       $message->update(
         [
@@ -83,7 +94,30 @@ class MessageController extends Controller
       );
     }
 
-    // TODO: event broadcasting
+    if ($request->parent_id) {
+      $parentMessage = Message::with([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ])->findOrFail($message->parent_id);
+
+      MessageUpdated::dispatch(
+        "message.messages.{$parentMessage->workspace_id}",
+        $parentMessage
+      );
+    } elseif ($request->channel) {
+      MessageSent::dispatch(
+        "channel.messages.{$message->channel_id}",
+        $message
+      );
+    } elseif ($request->conversation) {
+      MessageSent::dispatch(
+        "conversation.messages.{$message->conversation_id}",
+        $message
+      );
+    }
   }
 
   public function update(string $id, string $message, Request $request)
@@ -103,7 +137,28 @@ class MessageController extends Controller
       'body' => $request->body,
     ]);
 
-    // TODO: event broadcasting
+    if ($message->parent_id) {
+      $message = Message::with([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ])->findOrFail($message->parent_id);
+    } else {
+      $message->load([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ]);
+    }
+
+    MessageUpdated::dispatch(
+      "message.messages.{$message->workspace_id}",
+      $message
+    );
   }
 
   public function destroy(string $id, string $message)
@@ -117,7 +172,12 @@ class MessageController extends Controller
 
     $message->delete();
 
-    // TODO: event broadcasting
+    broadcast(
+      new MessageDeleted(
+        "message.messages.{$message->workspace_id}",
+        $message->id
+      )
+    )->toOthers();
   }
 
   public function addReaction(string $id, string $message, Request $request)
@@ -142,6 +202,27 @@ class MessageController extends Controller
       );
     }
 
-    // TODO: event broadcasting
+    if ($message->parent_id) {
+      $message = Message::with([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ])->findOrFail($message->parent_id);
+    } else {
+      $message->load([
+        'user',
+        'reactions',
+        'replies',
+        'replies.user',
+        'replies.reactions',
+      ]);
+    }
+
+    MessageUpdated::dispatch(
+      "message.messages.{$message->workspace_id}",
+      $message
+    );
   }
 }
