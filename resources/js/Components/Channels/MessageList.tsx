@@ -1,3 +1,4 @@
+import MessageComponent from '@/Components/Message'
 import { useWorkspace } from '@/Context/WorkspaceContext'
 import { cn } from '@/Lib/utils'
 import { Metadata } from '@/types/pagination'
@@ -5,9 +6,8 @@ import { Message } from '@/types/workspace'
 import axios from 'axios'
 import { differenceInMinutes, format, isToday, isYesterday } from 'date-fns'
 import { useEffect, useState } from 'react'
-import ChannelHero from './Channels/ChannelHero'
-import MessageComponent from './Message'
-import { Button } from './Ui/button'
+import { Button } from '../Ui/button'
+import ChannelHero from './ChannelHero'
 
 type Props = {
   variant?: 'channel' | 'thread' | 'conversation'

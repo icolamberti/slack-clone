@@ -1,6 +1,6 @@
 import ChannelHeader from '@/Components/Channels/ChannelHeader'
 import ChatInput from '@/Components/Channels/ChatInput'
-import MessageList from '@/Components/MessageList'
+import MessageList from '@/Components/Channels/MessageList'
 import Thread from '@/Components/Messages/Thread'
 import {
   ResizableHandle,
