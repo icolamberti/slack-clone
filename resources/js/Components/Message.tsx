@@ -12,6 +12,7 @@ import Hint from './Hint'
 import MessageToolbar from './MessageToolbar'
 import Reactions from './Reactions'
 import Renderer from './Renderer'
+import ThreadBar from './ThreadBar'
 import Thumbnail from './Thumbnail'
 import { Avatar, AvatarFallback, AvatarImage } from './Ui/avatar'
 
@@ -167,6 +168,13 @@ export default function ({
                   reactions={message.reactions}
                   onChange={handleReaction}
                 />
+
+                {!hideThreadButton && (
+                  <ThreadBar
+                    message={message}
+                    onClick={() => onOpenMessage(message.id)}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -251,6 +259,13 @@ export default function ({
                 reactions={message.reactions}
                 onChange={handleReaction}
               />
+
+              {!hideThreadButton && (
+                <ThreadBar
+                  message={message}
+                  onClick={() => onOpenMessage(message.id)}
+                />
+              )}
             </div>
           )}
         </div>

@@ -34,6 +34,7 @@ export type Message = {
   id: string
   body: string
   image?: string
+  parent_id: string
   created_at: string
   updated_at: string
   user: User
