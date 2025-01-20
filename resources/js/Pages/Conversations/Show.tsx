@@ -1,6 +1,7 @@
 import ChatInput from '@/Components/Conversations/ChatInput'
 import ConversationHeader from '@/Components/Conversations/ConversationHeader'
 import MessageList from '@/Components/MessageList'
+import Profile from '@/Components/Profile'
 import Thread from '@/Components/Thread'
 import {
   ResizableHandle,
@@ -11,6 +12,7 @@ import WorkspaceSidebar from '@/Components/Workspaces/WorkspaceSidebar'
 import { WorkspaceProvider } from '@/Context/WorkspaceContext'
 import { usePanel } from '@/Hooks/UsePanel'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import { User } from '@/types'
 import { Conversation, Message, Workspace } from '@/types/workspace'
 import { useState } from 'react'
 
@@ -20,15 +22,27 @@ type Props = {
 }
 
 export default function ({ workspace, conversation }: Props) {
-  const { parentMessageId } = usePanel()
+  const { parentMessageId, profileMemberId } = usePanel()
 
   const [messages, setMessages] = useState<Message[]>([])
 
   const listenChannel = `conversation.messages.${conversation.id}`
 
-  const showPanel = !!parentMessageId
+  const showPanel = !!parentMessageId || !!profileMemberId
 
   const message = messages.find(message => message.id === parentMessageId)
+
+  const member = messages.reduce(
+    (foundUser: User | undefined, message: Message) => {
+      if (foundUser) return foundUser
+      if (message.user.id === profileMemberId) return message.user
+      const replyUser = message.replies?.find(
+        reply => reply.user.id === profileMemberId,
+      )?.user
+      return replyUser || undefined
+    },
+    undefined,
+  )
 
   const onDestroyMessage = (messageId: string) => {
     setMessages(
@@ -79,7 +93,14 @@ export default function ({ workspace, conversation }: Props) {
               <ResizableHandle withHandle />
 
               <ResizablePanel defaultSize={29} minSize={20}>
-                <Thread message={message} onDestroyMessage={onDestroyMessage} />
+                {parentMessageId && (
+                  <Thread
+                    message={message}
+                    onDestroyMessage={onDestroyMessage}
+                  />
+                )}
+
+                {profileMemberId && <Profile member={member} />}
               </ResizablePanel>
             </>
           )}

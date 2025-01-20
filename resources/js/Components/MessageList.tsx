@@ -123,7 +123,6 @@ export default function ({
       )
     })
     .listen('.message-deleted', (e: { messageId: string }) => {
-      console.log(e)
       setMessages(messages.filter(message => message.id !== e.messageId))
     })
 

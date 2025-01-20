@@ -35,7 +35,7 @@ export default function ({
 }: Props) {
   const { user } = usePage().props.auth
   const { workspace } = useWorkspace()
-  const { parentMessageId, onOpenMessage, onClose } = usePanel()
+  const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel()
 
   const [ConfirmDialog, confirm] = useConfirm(
     'Delete message',
@@ -208,7 +208,7 @@ export default function ({
         )}
       >
         <div className='flex items-start gap-2'>
-          <button>
+          <button onClick={() => onOpenProfile(message.user.id)}>
             <Avatar>
               <AvatarImage src={message.user.avatar} />
 
@@ -232,7 +232,7 @@ export default function ({
             <div className='flex w-full flex-col overflow-hidden'>
               <div className='text-sm'>
                 <button
-                  onClick={() => {}}
+                  onClick={() => onOpenProfile(message.user.id)}
                   className='font-bold text-primary hover:underline'
                 >
                   {message.user.name}
